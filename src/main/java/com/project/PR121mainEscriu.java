@@ -22,17 +22,23 @@ public class PR121mainEscriu {
         }
     }
 
-    // Getter
     public static String getFilePath() {
         return filePath;
     }
 
-    // Setter
     public static void setFilePath(String newFilePath) {
         filePath = newFilePath;
     }
 
     public static void serialitzarHashMap(PR121hashmap hashMap) throws IOFitxerExcepcio {
-        // *************** CODI PRÀCTICA **********************/
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+
+            oos.writeObject(hashMap);
+
+        } catch (IOException e) {
+            throw new IOFitxerExcepcio(
+                "Error en serialitzar l'objecte HashMap: " + e.getMessage()
+            );
+        }
     }
 }
