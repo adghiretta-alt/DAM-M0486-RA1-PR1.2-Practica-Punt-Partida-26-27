@@ -18,25 +18,44 @@ public class PR122main {
         try {
             serialitzarPersones(persones);
             List<PR122persona> deserialitzades = deserialitzarPersones();
-            deserialitzades.forEach(System.out::println);  // Mostra la informació per pantalla
+            deserialitzades.forEach(System.out::println);
         } catch (IOFitxerExcepcio e) {
             System.err.println("Error: " + e.getMessage());
         }
     }
 
-    // Mètode per serialitzar la llista de persones
     public static void serialitzarPersones(List<PR122persona> persones) throws IOFitxerExcepcio {
-        // *************** CODI PRÀCTICA **********************/
+        try (ObjectOutputStream oos = new ObjectOutputStream(
+                new FileOutputStream(filePath))) {
+
+            oos.writeObject(persones);
+
+        } catch (FileNotFoundException e) {
+            throw new IOFitxerExcepcio("Fitxer no trobat: " + filePath, e);
+        } catch (IOException e) {
+            throw new IOFitxerExcepcio(
+                    "Error en serialitzar les persones: " + e.getMessage(), e);
+        }
     }
 
-    // Mètode per deserialitzar la llista de persones
+    @SuppressWarnings("unchecked")
     public static List<PR122persona> deserialitzarPersones() throws IOFitxerExcepcio {
-        // *************** CODI PRÀCTICA **********************/
-        return new ArrayList<>(); // Substitueix pel teu
+        try (ObjectInputStream ois = new ObjectInputStream(
+                new FileInputStream(filePath))) {
+
+            return (List<PR122persona>) ois.readObject();
+
+        } catch (FileNotFoundException e) {
+            throw new IOFitxerExcepcio("Fitxer no trobat: " + filePath, e);
+        } catch (IOException e) {
+            throw new IOFitxerExcepcio(
+                    "Error en deserialitzar les persones: " + e.getMessage(), e);
+        } catch (ClassNotFoundException e) {
+            throw new IOFitxerExcepcio(
+                    "Classe no trobada durant la deserialització: " + e.getMessage(), e);
+        }
     }
 
-
-    // Getter i Setter per a filePath (opcional)
     public static String getFilePath() {
         return filePath;
     }
