@@ -55,7 +55,6 @@ public class PR123mainTreballadors {
         }
     }
 
-    // Mètode que mostra el menú
     private void mostrarMenu() {
         System.out.println("\nMenú de Gestió de Treballadors");
         System.out.println("1. Mostra tots els treballadors");
@@ -64,7 +63,6 @@ public class PR123mainTreballadors {
         System.out.print("Selecciona una opció: ");
     }
 
-    // Mètode per mostrar els treballadors llegint el fitxer CSV
     public void mostrarTreballadors() throws IOFitxerExcepcio {
 
         List<String> treballadorsCSV = llegirFitxerCSV();
@@ -137,18 +135,11 @@ public class PR123mainTreballadors {
 
         boolean trobat = false;
 
-        // Recorrem totes les línies del CSV
         for (int i = 0; i < treballadorsCSV.size(); i++) {
 
             String linia = treballadorsCSV.get(i);
 
-            /*
-             * Separem els camps només per comprovar
-             * que la línia té el format esperat.
-             *
-             * El -1 fa que també es conservin camps buits
-             * al final de la línia.
-             */
+        
             String[] camps = linia.split(",", -1);
 
             // Si la línia no té almenys 5 camps, la ignorem
@@ -159,14 +150,7 @@ public class PR123mainTreballadors {
             // Comprovem si l'Id coincideix
             if (camps[0].trim().equals(id.trim())) {
 
-                /*
-                 * IMPORTANT:
-                 * No reconstruïm tota la línia amb String.join().
-                 *
-                 * Només substituïm el valor del camp que volem
-                 * modificar, mantenint la resta de la línia
-                 * exactament igual.
-                 */
+ 
 
                 int inici = 0;
 
@@ -194,23 +178,19 @@ public class PR123mainTreballadors {
 
                 trobat = true;
 
-                // Ja hem trobat el treballador, no cal continuar
                 break;
             }
         }
 
-        // Si no existeix l'Id
         if (!trobat) {
             throw new IllegalArgumentException(
                     "No existeix cap treballador amb l'Id: " + id
             );
         }
 
-        // Escrivim les dades modificades al mateix fitxer
         escriureFitxerCSV(treballadorsCSV);
     }
 
-    // Encapsulació de llegir el fitxer CSV
     private List<String> llegirFitxerCSV() throws IOFitxerExcepcio {
 
         List<String> treballadorsCSV = UtilsCSV.llegir(filePath);
@@ -224,7 +204,6 @@ public class PR123mainTreballadors {
         return treballadorsCSV;
     }
 
-    // Encapsulació d'escriure el fitxer CSV
     private void escriureFitxerCSV(
             List<String> treballadorsCSV
     ) throws IOFitxerExcepcio {
@@ -240,7 +219,6 @@ public class PR123mainTreballadors {
         }
     }
 
-    // Mètode main
     public static void main(String[] args) {
 
         PR123mainTreballadors programa =
