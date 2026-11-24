@@ -9,106 +9,192 @@ import java.util.Scanner;
 
 public class PR123mainTreballadors {
 
-    private String filePath = System.getProperty("user.dir") + "/data/PR123treballadors.csv";
+    // Ruta del fichero CSV
+    private String filePath =
+            System.getProperty("user.dir")
+            + "/data/PR123treballadors.csv";
+
+    // Scanner para leer datos introducidos por el usuario
     private Scanner scanner = new Scanner(System.in);
 
-    // Getters i setters per a filePath
+    /**
+     * Devuelve la ruta actual del fichero.
+     */
     public String getFilePath() {
         return filePath;
     }
 
+    /**
+     * Permite modificar la ruta del fichero.
+     */
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Bucle principal del programa.
+     * Muestra el menú y ejecuta la opción elegida.
+     */
     public void iniciar() {
+
         boolean sortir = false;
 
         while (!sortir) {
+
             try {
-                // Mostrar menú
+
+                // Mostrar menú principal
                 mostrarMenu();
 
-                // Llegir opció de l'usuari
-                int opcio = Integer.parseInt(scanner.nextLine());
+                // Leer la opción seleccionada
+                int opcio =
+                        Integer.parseInt(
+                                scanner.nextLine()
+                        );
 
                 switch (opcio) {
+
+                    // Mostrar todos los trabajadores
                     case 1 -> mostrarTreballadors();
+
+                    // Modificar un trabajador
                     case 2 -> modificarTreballadorInteractiu();
+
+                    // Salir del programa
                     case 3 -> {
                         System.out.println("Sortint...");
                         sortir = true;
                     }
-                    default -> System.out.println("Opció no vàlida.");
+
+                    default ->
+                            System.out.println(
+                                    "Opció no vàlida."
+                            );
                 }
 
             } catch (NumberFormatException e) {
-                System.out.println("Si us plau, introdueix un número vàlid.");
+
+                System.out.println(
+                        "Si us plau, introdueix un número vàlid."
+                );
 
             } catch (IllegalArgumentException e) {
-                // Id inexistent o columna no vàlida
-                System.out.println("Error: " + e.getMessage());
+
+                // Error de ID o columna inexistente
+                System.out.println(
+                        "Error: " + e.getMessage()
+                );
 
             } catch (IOFitxerExcepcio e) {
-                System.err.println("Error: " + e.getMessage());
+
+                System.err.println(
+                        "Error: " + e.getMessage()
+                );
             }
         }
     }
 
+    /**
+     * Muestra las opciones disponibles.
+     */
     private void mostrarMenu() {
-        System.out.println("\nMenú de Gestió de Treballadors");
-        System.out.println("1. Mostra tots els treballadors");
-        System.out.println("2. Modificar dades d'un treballador");
-        System.out.println("3. Sortir");
-        System.out.print("Selecciona una opció: ");
+
+        System.out.println(
+                "\nMenú de Gestió de Treballadors"
+        );
+
+        System.out.println(
+                "1. Mostra tots els treballadors"
+        );
+
+        System.out.println(
+                "2. Modificar dades d'un treballador"
+        );
+
+        System.out.println(
+                "3. Sortir"
+        );
+
+        System.out.print(
+                "Selecciona una opció: "
+        );
     }
 
-    public void mostrarTreballadors() throws IOFitxerExcepcio {
+    /**
+     * Muestra por pantalla todas las líneas del CSV.
+     */
+    public void mostrarTreballadors()
+            throws IOFitxerExcepcio {
 
-        List<String> treballadorsCSV = llegirFitxerCSV();
+        // Leer trabajadores desde el fichero
+        List<String> treballadorsCSV =
+                llegirFitxerCSV();
 
+        // Mostrar cada línea
         for (String linia : treballadorsCSV) {
             System.out.println(linia);
         }
     }
 
-    // Mètode per modificar un treballador (interactiu)
-    public void modificarTreballadorInteractiu() throws IOFitxerExcepcio {
+    /**
+     * Solicita por consola los datos necesarios
+     * para modificar un trabajador.
+     */
+    public void modificarTreballadorInteractiu()
+            throws IOFitxerExcepcio {
 
-        // Demanar l'ID del treballador
-        System.out.print("\nIntrodueix l'ID del treballador que vols modificar: ");
+        // Pedir ID
+        System.out.print(
+                "\nIntrodueix l'ID del treballador que vols modificar: "
+        );
+
         String id = scanner.nextLine();
 
-        // Demanar quina dada vols modificar
-        System.out.print("Quina dada vols modificar (Nom, Cognom, Departament, Salari)? ");
-        String columna = scanner.nextLine();
+        // Pedir columna
+        System.out.print(
+                "Quina dada vols modificar (Nom, Cognom, Departament, Salari)? "
+        );
 
-        // Demanar el nou valor
-        System.out.print("Introdueix el nou valor per a " + columna + ": ");
-        String nouValor = scanner.nextLine();
+        String columna =
+                scanner.nextLine();
 
-        // Modificar treballador
-        modificarTreballador(id, columna, nouValor);
+        // Pedir valor nuevo
+        System.out.print(
+                "Introdueix el nou valor per a "
+                        + columna + ": "
+        );
+
+        String nouValor =
+                scanner.nextLine();
+
+        // Realizar modificación
+        modificarTreballador(
+                id,
+                columna,
+                nouValor
+        );
     }
 
-    // Mètode que modifica treballador (per a tests i usuaris)
-    // llegint i escrivint sobre disc.
-    //
-    // - Si l'Id no existeix o la columna no és vàlida
-    //   llança IllegalArgumentException.
-    // - Si hi ha problemes amb el fitxer
-    //   llança IOFitxerExcepcio.
+    /**
+     * Modifica un trabajador existente.
+     *
+     * @param id ID del trabajador
+     * @param columna Campo a modificar
+     * @param nouValor Nuevo valor
+     */
     public void modificarTreballador(
             String id,
             String columna,
             String nouValor
     ) throws IOFitxerExcepcio {
 
-        List<String> treballadorsCSV = llegirFitxerCSV();
+        // Cargar fichero en memoria
+        List<String> treballadorsCSV =
+                llegirFitxerCSV();
 
         int indexColumna;
 
-        // Determinem quina columna volem modificar
+        // Identificar qué columna se modificará
         switch (columna.trim().toLowerCase()) {
 
             case "nom":
@@ -129,52 +215,73 @@ public class PR123mainTreballadors {
 
             default:
                 throw new IllegalArgumentException(
-                        "La columna '" + columna + "' no és vàlida."
+                        "La columna '"
+                        + columna
+                        + "' no és vàlida."
                 );
         }
 
         boolean trobat = false;
 
-        for (int i = 0; i < treballadorsCSV.size(); i++) {
+        // Recorrer todas las líneas
+        for (int i = 0;
+             i < treballadorsCSV.size();
+             i++) {
 
-            String linia = treballadorsCSV.get(i);
+            String linia =
+                    treballadorsCSV.get(i);
 
-        
-            String[] camps = linia.split(",", -1);
+            // Separar la línea por comas
+            String[] camps =
+                    linia.split(",", -1);
 
-            // Si la línia no té almenys 5 camps, la ignorem
+            // Ignorar líneas incorrectas
             if (camps.length < 5) {
                 continue;
             }
 
-            // Comprovem si l'Id coincideix
-            if (camps[0].trim().equals(id.trim())) {
-
- 
+            // Comprobar si coincide el ID
+            if (camps[0].trim()
+                    .equals(id.trim())) {
 
                 int inici = 0;
 
-                // Busquem l'inici de la columna que volem modificar
-                for (int j = 0; j < indexColumna; j++) {
-                    inici = linia.indexOf(",", inici) + 1;
+                // Buscar el inicio de la columna
+                // que queremos modificar
+                for (int j = 0;
+                     j < indexColumna;
+                     j++) {
+
+                    inici =
+                            linia.indexOf(
+                                    ",",
+                                    inici
+                            ) + 1;
                 }
 
-                // Busquem el final del camp
-                int finalCamp = linia.indexOf(",", inici);
+                // Buscar el final del campo
+                int finalCamp =
+                        linia.indexOf(
+                                ",",
+                                inici
+                        );
 
-                // Si és l'últim camp, el final és el final de la línia
+                // Si es el último campo
                 if (finalCamp == -1) {
                     finalCamp = linia.length();
                 }
 
-                // Substituïm únicament el valor del camp
+                // Crear la nueva línea
                 String liniaModificada =
                         linia.substring(0, inici)
                         + nouValor
                         + linia.substring(finalCamp);
 
-                // Guardem la línia modificada
-                treballadorsCSV.set(i, liniaModificada);
+                // Sustituir la línea original
+                treballadorsCSV.set(
+                        i,
+                        liniaModificada
+                );
 
                 trobat = true;
 
@@ -182,48 +289,79 @@ public class PR123mainTreballadors {
             }
         }
 
+        // Comprobar si se encontró el trabajador
         if (!trobat) {
+
             throw new IllegalArgumentException(
-                    "No existeix cap treballador amb l'Id: " + id
+                    "No existeix cap treballador amb l'Id: "
+                    + id
             );
         }
 
-        escriureFitxerCSV(treballadorsCSV);
+        // Guardar los cambios en el fichero
+        escriureFitxerCSV(
+                treballadorsCSV
+        );
     }
 
-    private List<String> llegirFitxerCSV() throws IOFitxerExcepcio {
+    /**
+     * Lee el fichero CSV.
+     */
+    private List<String> llegirFitxerCSV()
+            throws IOFitxerExcepcio {
 
-        List<String> treballadorsCSV = UtilsCSV.llegir(filePath);
+        // Leer fichero mediante UtilsCSV
+        List<String> treballadorsCSV =
+                UtilsCSV.llegir(filePath);
 
+        // Comprobar errores de lectura
         if (treballadorsCSV == null) {
+
             throw new IOFitxerExcepcio(
-                    "Error en llegir el fitxer: " + filePath
+                    "Error en llegir el fitxer: "
+                    + filePath
             );
         }
 
         return treballadorsCSV;
     }
 
+    /**
+     * Guarda la lista actualizada
+     * en el fichero CSV.
+     */
     private void escriureFitxerCSV(
             List<String> treballadorsCSV
     ) throws IOFitxerExcepcio {
 
         try {
-            UtilsCSV.escriure(filePath, treballadorsCSV);
+
+            // Escribir contenido al fichero
+            UtilsCSV.escriure(
+                    filePath,
+                    treballadorsCSV
+            );
 
         } catch (IOException e) {
+
             throw new IOFitxerExcepcio(
-                    "Error en escriure el fitxer: " + filePath,
+                    "Error en escriure el fitxer: "
+                    + filePath,
                     e
             );
         }
     }
 
+    /**
+     * Punto de entrada del programa.
+     */
     public static void main(String[] args) {
 
+        // Crear instancia de la aplicación
         PR123mainTreballadors programa =
                 new PR123mainTreballadors();
 
+        // Iniciar programa
         programa.iniciar();
     }
 }
