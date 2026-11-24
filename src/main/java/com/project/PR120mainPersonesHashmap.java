@@ -88,7 +88,7 @@ public class PR120mainPersonesHashmap {
 
     /**
      * Lee las personas almacenadas en el fichero binario
-     * y las muestra por pantalla.
+     * y las muestra por pantalla..
      */
     public static void llegirPersones()
             throws IOFitxerExcepcio {
